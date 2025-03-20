@@ -1,0 +1,57 @@
+# PyTorch and related packages
+torch==1.12.1+cu113
+torchvision==0.13.1+cu113
+torchaudio==0.12.1+cu113
+
+# JupyterLab
+jupyterlab
+notebook
+
+# 基本的なデータ処理ライブラリ
+numpy<2
+pandas
+matplotlib
+scipy
+pytorch-crf
+seaborn
+
+# transformers とその依存関係
+transformers
+filelock
+regex
+safetensors
+tokenizers
+huggingface-hub
+
+# llama3.1 関連
+# vllm==0.2.0 いったん削除
+# xformers==0.0.23.post1 いったん削除
+
+# その他の便利なツール
+scipy
+scikit-learn
+optuna==3.1.0
+alembic
+sqlalchemy>=1.4.2
+colorlog
+
+# モデルのデプロイメントやサービングのためのライブラリ
+fastapi
+uvicorn
+
+# notebookでのインタラクティブな可視化
+ipython
+ipywidgets
+
+# slackで監視
+slack_bolt
+
+# openai API
+openai
+
+# その他
+pickleshare
+einops
+streamlit
+jaxtyping==0.2.14
+typeguard==3.0.2

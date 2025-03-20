@@ -1,0 +1,4 @@
+data/ragtruth_datasets/fine-tuning/train_detail.jsonl filter=lfs diff=lfs merge=lfs -text
+data/ragtruth_datasets/rag_truth_merged_data.jsonl filter=lfs diff=lfs merge=lfs -text
+*.jsonl filter=lfs diff=lfs merge=lfs -text
+*.json filter=lfs diff=lfs merge=lfs -text
