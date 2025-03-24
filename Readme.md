@@ -144,7 +144,7 @@ chown -R 1009:1009 /home/code
 
                     ```
                     docker run --name tensorrt --gpus all -p 8889:8888 \
-                      -v /home/user/hallucination/a_github_ja_test0319/:/home/code/ \
+                      -v /home/user/hallucination/Hal_detect_attention/:/home/code/ \
                       -v /data1/user/hallucination/data:/home/code/data/ \
                       -v /home/user/vishnu:/home/code/vishnu \
                       --shm-size=64g \
