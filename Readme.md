@@ -188,44 +188,43 @@ Trains and evaluates a Transformer encoder using attention-based features.
   - **Uses 2 GPUs**, taking around **2–4 days**.
   - The code is optimized based on the number of GPUs used.
 
----
 
-    #### Important Parameters
-    
-    - **mode**
-      - `span`: Token-level hallucination detection (for QA, Data2txt, Summary)  
-      - `pooling`: Sentence-level hallucination detection (for TruthfulQA)
-    
-    - **span_decoder**
-      - Chooses between CRF and linear layer.  
-      - **CRF is recommended.**
-    
-    - **feature_type**
-      - `raw`: Uses raw attention values.  
-      - `norm`: Uses attention multiplied by norms (as in Kobayashi et al.).
-    
-    - **features_to_use**
-      - Select from: `key_avg`, `query_entropy`, `key_entropy`, `lookback_ratio`.  
-      - Use comma-separated values for multiple features (e.g., `"key_avg,query_entropy"`).
-    
-    - **layers**
-      - Specify attention layer indices as a comma-separated list.  
-      - For all layers:
-        - LLaMA: `0–31`  
-        - Qwen: `0–27`
-    
-    - **heads**
-      - Specify attention head indices, in the same format as `layers`.
-    
-    - **clf_mode**
-      - Typically set to `transformer`.  
-      - `lookback_ratio_lr`: Used for applying logistic regression on the `lookback_ratio` feature for comparison.
-    
-    - **pooling_type**
-      - Specific to **TruthfulQA** mode; refer to the master’s thesis for details.
-    
-    - **top_models_json_path**
-      - Path to a JSON file (within `training_file`) that contains hyperparameters from previous training sessions for reuse.
+#### Important Parameters
+
+- **mode**
+  - `span`: Token-level hallucination detection (for QA, Data2txt, Summary)  
+  - `pooling`: Sentence-level hallucination detection (for TruthfulQA)
+
+- **span_decoder**
+  - Chooses between CRF and linear layer.  
+  - **CRF is recommended.**
+
+- **feature_type**
+  - `raw`: Uses raw attention values.  
+  - `norm`: Uses attention multiplied by norms (as in Kobayashi et al.).
+
+- **features_to_use**
+  - Select from: `key_avg`, `query_entropy`, `key_entropy`, `lookback_ratio`.  
+  - Use comma-separated values for multiple features (e.g., `"key_avg,query_entropy"`).
+
+- **layers**
+  - Specify attention layer indices as a comma-separated list.  
+  - For all layers:
+    - LLaMA: `0–31`  
+    - Qwen: `0–27`
+
+- **heads**
+  - Specify attention head indices, in the same format as `layers`.
+
+- **clf_mode**
+  - Typically set to `transformer`.  
+  - `lookback_ratio_lr`: Used for applying logistic regression on the `lookback_ratio` feature for comparison.
+
+- **pooling_type**
+  - Specific to **TruthfulQA** mode; refer to the master’s thesis for details.
+
+- **top_models_json_path**
+  - Path to a JSON file (within `training_file`) that contains hyperparameters from previous training sessions for reuse.
     
 
 - その他
