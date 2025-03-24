@@ -1,4 +1,4 @@
-Hallucination Detection using Multi-View Attention Features
+# Hallucination Detection using Multi-View Attention Features
 
 
 
@@ -90,16 +90,16 @@ in container
 chown -R 1009:1009 /home/code
 
 
-# コード関係 github_ver
 
-- 動作環境
-    - CUDA Version: 11.4
-        - Driver Version: 470.57.02
-        - すこしCUDAのバージョンが古いので，新しいバージョンで動作する場合，コードに若干の修正が必要かもしれません
-    - GPU NVIDIA RTX A6000 ****max 3枚 (48GB/枚)
-    - Docker Version: 20.10.8
-        - API version:  1.41
-    - rudraサーバ
+- **Environment**
+    - **CUDA Version**: 11.4  
+        - **Driver Version**: 470.57.02  
+        - *Note: The CUDA version is slightly outdated, so some modifications may be required for newer versions.*
+    - **GPU**: NVIDIA RTX A6000, up to 3 GPUs (48GB each)
+    - **Docker Version**: 20.10.8  
+        - **API Version**: 1.41
+
+        
 
 - Dockerの環境構築
     - Dockerfileがあるディレクトリ (/docker)で以下のコマンドを実行し，イメージを作成
