@@ -101,33 +101,35 @@ chown -R 1009:1009 /home/code
 
         
 
-- Dockerの環境構築
-    - Dockerfileがあるディレクトリ (/docker)で以下のコマンドを実行し，イメージを作成
-        
+- **Docker Environment Setup**
+    - To build the image, run the following command in the directory where the Dockerfile is located (`/docker`):
+
         ```
         docker build -t tensorrt_jupyterlab .
         ```
-        
-        - ライブラリを更新したい場合は，上記のコマンド実行前に/docker/requirements.txtを更新してください
-    - そのあと，以下のコマンドを実行してコンテナを立てる
-        
+
+        - If you want to update the libraries, please modify `/docker/requirements.txt` before running the above command.
+
+    - Then, run the following command to start the container:
+
         ```
         docker run --name tensorrt --gpus all -p 8888:8888 \
           -v /path/to/home/directory/:/home/code/ \
           --shm-size=64g \
           -it tensorrt_jupyterlab
         ```
-        
-        - 本コードではjupyter notebookを使用します
-        - /path/to/home/directoryの箇所には，マウントするディレクトリのフルパス（例えば/home/ogasa/hallucination/code_ja）などを入れてください
-        - --name tensorrtの箇所はコンテナ名になるので適宜変更してください
-        - —gpus gpuどれ使うか
-        - port 8888が使用されている場合も変更してください
-        - 本コードのcode/dataには大規模サイズ（数100GB程度）のファイルが含まれることがあります．
-            - メインのドライブに保存して容量が足りなくなる恐れがある場合は，以下のことを実行してください
-                1. dataのディレクトリを大規模なドライブにコピーする
-                2. コピーしたディレクトリに対してマウントするようにする
-                    
+
+        - This code uses Jupyter Notebook.
+        - Replace `/path/to/home/directory/` with the full path of the directory you want to mount (e.g., `/home/user/hallucination/code_ja`).
+        - The `--name tensorrt` part is the container name; change it as needed.
+        - Use `--gpus` to specify which GPUs to use.
+        - If port 8888 is already in use, please change it.
+        - The `code/data` directory in this project may include large files (hundreds of GB).
+            - If storing such files on the main drive may cause space issues, follow these steps:
+
+                1. Copy the `data` directory to a large-capacity drive.
+                2. Mount the copied directory using the command below:
+
                     ```
                     docker run --name tensorrt --gpus all -p 8888:8888 \
                       -v /path/to/home/directory/:/home/code/ \
@@ -135,45 +137,43 @@ chown -R 1009:1009 /home/code
                       --shm-size=64g \
                       -it tensorrt_jupyterlab
                     ```
-                    
-                    - path/to/dataのところに先ほどコピーしたディレクトリのフルパスを設定してください
-                    
-                    参考
-                    
-                    - 小笠のコードの場合は
-                    
+
+                    - Set `/path/to/data/` to the full path of the copied data directory.
+
+                    **Example (for user):**
+
                     ```
                     docker run --name tensorrt --gpus all -p 8889:8888 \
-                      -v /home/ogasa/hallucination/a_github_ja_test0319/:/home/code/ \
-                      -v /data1/ogasa/hallucination/data:/home/code/data/ \
-                      -v //home/ogasa/vishnu:/home/code/vishnu \
+                      -v /home/user/hallucination/a_github_ja_test0319/:/home/code/ \
+                      -v /data1/user/hallucination/data:/home/code/data/ \
+                      -v /home/user/vishnu:/home/code/vishnu \
                       --shm-size=64g \
                       -it tensorrt_jupyterlab
                     ```
-                    
-                    - /home/ogasa/hallucination/a_github_ja_test0319はメインドライブ
-                    - /data1/ogasa/hallucination/dataは大規模データが保存可能なドライブ
-                    - : の左がローカルのパス
-                    - ※vishnuはファイルサーバ
-    - vscodeを使えば，
-        - このリモートエクスプローラーのところから起動可能
-            - 新しいwindowをアタッチ
-        
+
+                    - `/home/user/hallucination/a_github_ja_test0319` is the main drive.
+                    - `/data1/user/hallucination/data` is a drive that can store large data.
+                    - The left side of the `:` is the local path.
+                    - `vishnu` is a file server.
+
+    - If you are using VS Code:
+        - You can start the container from the **Remote Explorer** section
+            - Attach to a new window.
+
         ![image.png](image.png)
-        
-        - 下記のようにvscodeを使ってコンテナ内でjupyter notebookが操作・実行可能
-            
+
+        - You can operate and run Jupyter Notebook inside the container using VS Code:
+
             ![image.png](image%201.png)
-            
-        - ※このvscode上でpythonコードを実行する場合には，拡張機能が必要
-            - pythonとjupyterの拡張機能は入れてください
-            - その他もcopilotとか必要なものがあれば適宜
-            - 上手く動作しない場合は
-                - vscodeのウィンドウを閉じる→再度開く
-                - コンテナを再起動
-                - コンテナを立て直す
-                
-                の順番でやってみてください
+
+        - To run Python code in VS Code, make sure the required extensions are installed:
+            - Install **Python** and **Jupyter** extensions.
+            - Optionally, install other useful extensions like **Copilot**.
+            - If it doesn't work properly, try the following steps in order:
+                1. Close and reopen the VS Code window.
+                2. Restart the container.
+                3. Rebuild and restart the container.
+
                 
         
 
