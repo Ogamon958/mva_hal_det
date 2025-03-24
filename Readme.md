@@ -158,13 +158,8 @@ chown -R 1009:1009 /home/code
 
     - If you are using VS Code:
         - You can start the container from the **Remote Explorer** section
-            - Attach to a new window.
-
-        ![image.png](image.png)
 
         - You can operate and run Jupyter Notebook inside the container using VS Code:
-
-            ![image.png](image%201.png)
 
         - To run Python code in VS Code, make sure the required extensions are installed:
             - Install **Python** and **Jupyter** extensions.
