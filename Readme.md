@@ -131,7 +131,7 @@ chown -R 1009:1009 /home/code
         ```
 
         - This code uses Jupyter Notebook.
-        - Replace `/path/to/home/directory/` with the full path of the directory you want to mount (e.g., `/home/user/hallucination/code_ja`).
+        - Replace `/path/to/home/directory/` with the full path of the directory you want to mount (e.g., `/home/user/hallucination/Hal_detect_attention`).
         - The `--name tensorrt` part is the container name; change it as needed.
         - Use `--gpus` to specify which GPUs to use.
         - If port 8888 is already in use, please change it.
@@ -162,7 +162,7 @@ chown -R 1009:1009 /home/code
                       -it tensorrt_jupyterlab
                     ```
 
-                    - `/home/user/hallucination/a_github_ja_test0319` is the main drive.
+                    - `/home/user/hallucination/Hal_detect_attention` is the main drive.
                     - `/data1/user/hallucination/data` is a drive that can store large data.
                     - The left side of the `:` is the local path.
                     - `vishnu` is a file server.
