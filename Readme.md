@@ -88,3 +88,272 @@ id -g
 
 in container
 chown -R 1009:1009 /home/code
+
+
+# コード関係 github_ver
+
+- 動作環境
+    - CUDA Version: 11.4
+        - Driver Version: 470.57.02
+        - すこしCUDAのバージョンが古いので，新しいバージョンで動作する場合，コードに若干の修正が必要かもしれません
+    - GPU NVIDIA RTX A6000 ****max 3枚 (48GB/枚)
+    - Docker Version: 20.10.8
+        - API version:  1.41
+    - rudraサーバ
+
+- Dockerの環境構築
+    - Dockerfileがあるディレクトリ (/docker)で以下のコマンドを実行し，イメージを作成
+        
+        ```
+        docker build -t tensorrt_jupyterlab .
+        ```
+        
+        - ライブラリを更新したい場合は，上記のコマンド実行前に/docker/requirements.txtを更新してください
+    - そのあと，以下のコマンドを実行してコンテナを立てる
+        
+        ```
+        docker run --name tensorrt --gpus all -p 8888:8888 \
+          -v /path/to/home/directory/:/home/code/ \
+          --shm-size=64g \
+          -it tensorrt_jupyterlab
+        ```
+        
+        - 本コードではjupyter notebookを使用します
+        - /path/to/home/directoryの箇所には，マウントするディレクトリのフルパス（例えば/home/ogasa/hallucination/code_ja）などを入れてください
+        - --name tensorrtの箇所はコンテナ名になるので適宜変更してください
+        - —gpus gpuどれ使うか
+        - port 8888が使用されている場合も変更してください
+        - 本コードのcode/dataには大規模サイズ（数100GB程度）のファイルが含まれることがあります．
+            - メインのドライブに保存して容量が足りなくなる恐れがある場合は，以下のことを実行してください
+                1. dataのディレクトリを大規模なドライブにコピーする
+                2. コピーしたディレクトリに対してマウントするようにする
+                    
+                    ```
+                    docker run --name tensorrt --gpus all -p 8888:8888 \
+                      -v /path/to/home/directory/:/home/code/ \
+                      -v /path/to/data/:/home/code/data/ \
+                      --shm-size=64g \
+                      -it tensorrt_jupyterlab
+                    ```
+                    
+                    - path/to/dataのところに先ほどコピーしたディレクトリのフルパスを設定してください
+                    
+                    参考
+                    
+                    - 小笠のコードの場合は
+                    
+                    ```
+                    docker run --name tensorrt --gpus all -p 8889:8888 \
+                      -v /home/ogasa/hallucination/a_github_ja_test0319/:/home/code/ \
+                      -v /data1/ogasa/hallucination/data:/home/code/data/ \
+                      -v //home/ogasa/vishnu:/home/code/vishnu \
+                      --shm-size=64g \
+                      -it tensorrt_jupyterlab
+                    ```
+                    
+                    - /home/ogasa/hallucination/a_github_ja_test0319はメインドライブ
+                    - /data1/ogasa/hallucination/dataは大規模データが保存可能なドライブ
+                    - : の左がローカルのパス
+                    - ※vishnuはファイルサーバ
+    - vscodeを使えば，
+        - このリモートエクスプローラーのところから起動可能
+            - 新しいwindowをアタッチ
+        
+        ![image.png](image.png)
+        
+        - 下記のようにvscodeを使ってコンテナ内でjupyter notebookが操作・実行可能
+            
+            ![image.png](image%201.png)
+            
+        - ※このvscode上でpythonコードを実行する場合には，拡張機能が必要
+            - pythonとjupyterの拡張機能は入れてください
+            - その他もcopilotとか必要なものがあれば適宜
+            - 上手く動作しない場合は
+                - vscodeのウィンドウを閉じる→再度開く
+                - コンテナを再起動
+                - コンテナを立て直す
+                
+                の順番でやってみてください
+                
+        
+
+- 研究概要
+    - HallucinationをLLMのトークンごとに検出する研究
+    - トークンごとにハルシネーションが含まれるかどうかの教師あり学習をTransformerエンコーダベースのモデルで行う
+    - ラベル付けのデータにはRAGTruthのデータを使用
+        
+        [33F23006-小笠雄也（鬼塚研）-スライド.pdf](33F23006-%E5%B0%8F%E7%AC%A0%E9%9B%84%E4%B9%9F%EF%BC%88%E9%AC%BC%E5%A1%9A%E7%A0%94%EF%BC%89-%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%89.pdf)
+        
+    - truthfulqaに関しても実験を実施
+        - ただしこちらは文単位でのハルシネーション検出
+        - 詳しくは修論に書いてあるので，もし必要になったら読んでください（6章）
+            - （一部内容を省略して書いているので分かりにくかったらすみません）
+    
+    [ogasa_thesis_20250217.pdf](ogasa_thesis_20250217.pdf)
+    
+
+- メインのコードの簡単な説明 (/featuresに含まれる)
+    - 1_create_data.ipynb
+        - アテンションに関する特徴量を作成
+            - 各トークンが，他のトークンから受けた注目度の平均
+                - key_avg
+            - 各トークンに，注目を向けているトークンの多様さ
+                - key_entropy
+            - 各トークンの生成時に，注目を与えたトークンの多様さ
+                - query_entropy
+            - 比較手法の，入力と出力にかかるアテンション比
+                - lookback_ratio
+                - 参考 https://github.com/voidism/Lookback-Lens
+        - 同時にgen_features.pyも使用
+        - llamaのモデルを使う場合は，hugging faceに申請を行い，トークンを発行する必要がある
+        - 以下のパスを変更することで，llmの保存先を変更することが可能
+            
+            ```
+            #huggingfaceのcacheを変更 (必要ならば)
+            os.environ['HF_HOME'] = "/home/code/vishnu/llm"
+            ```
+            
+        - /home/code/data/saves/{model_type}_{task_type}.pklに特徴量が保存される
+            - 1ファイル辺り50-80GBくらいの容量の大きなファイルになるので注意
+        - 動作確認済
+        - matrix_device_{o,v}：アテンション変形用のGPU
+    - 2_ragtruth_preprocessing.ipynb
+        - 1のコードで作った**ragtruth用の**特徴量をtransformerエンコーダの学習に使用できる形式に変換 (ragtruthバージョン)
+            - /home/code/data/saves/{model_type}_{task_type}.pkl　に 1_create_dataで作成した特徴量を保存する必要がある
+            - このコードによって，トークン辺りのハルシネーションラベル付け，訓練・検証・テストデータへの分割などが行われる
+                - 分割後のファイルも容量が大きいので，注意
+        - 動作確認済
+    - 2_truthqa_preprocessing.ipynb
+        - 1のコードで作ったtruthfulqa**用の**特徴量をtransformerエンコーダの学習に使用できる形式に変換 (truthqaバージョン)
+            - ラベル付け用モデルgpt-4o-miniのfine-tuning
+                - 現状はこれより明らかに性能が良いモデルがあると思うので，適宜更新してください
+            - そのモデルを使った，truthfulqaの文単位でのラベル付け
+                - hallucinationが発生している文と発生していない文が訓練データ，検証データ，テストデータにおいて均等になるように分割
+        - モデルのfine-tuningの箇所など一部動作確認していない箇所があります
+            - もしエラーが出たらすみません
+    - 3_training.ipynb
+        - アテンションに関する特徴量を使ったtransformerエンコーダの学習と評価
+        - optimize.pyとevaluate.pyと併用
+            - optimize.pyはモデルの訓練用コード
+            - evaluate.pyはモデルの評価用コード
+                - 評価精度と，具体的な出力が分かるので，どのハルシネーションを検出できているかなどの人目での評価が別プログラムによって可能になります．
+        - 特徴量をpklファイルから呼び出す際に非常に時間がかかるので，中間ファイル (/home/code/data/cashe_file/features/{model_type}/preprocessed_data_{model_type}_{dataset_name}*_*{feature_type}_all_features.pt) 
+        にデータを保存
+            - このファイルも容量が大きいので注意
+            - 初回実行時は中間ファイルがないので，学習開始までにかなり時間がかかります
+                - 1時間程度
+        - trainingにはかなり時間がかかります
+            - 150epoch max， 200trial，GPU2台使用で2~4日くらいかかる
+        - 1回の実行には，GPUを2台使うのが良いと思います
+            - GPUの使用台数によって，プログラムは最適化するようにしています
+        - パラメータについて
+            - mode
+                - span
+                    - トークン単位のハルシネーション検出
+                        - QA, Data2txt, Summary用
+                - pooling
+                    - 文単位のハルシネーション検出
+                        - truthqa用
+            - span_decoder
+                - crf層を使うか，linear層を使うか
+                - 基本はcrfでOK
+            - feature_type
+                - raw
+                    - アテンションをそのまま使う
+                - norm
+                    - Kobayashi et al.のノルムをアテンションに掛け算する手法を使って取得した特徴量
+            - features_to_use
+                - key_avg,query_entropy,key_entropy,lookback_ratio の中から選択．複数選択する場合はカンマ区切りで指定．例: "key_avg,query_entropy”
+            - layers
+                - 使用するアテンションの層の番号をすべてカンマ区切りで指定
+                    - 全ての層を使いたい場合は，llamaなら0~31
+                    - qwenなら0~27をカンマ区切りで指定
+            - heads
+                - 使用するアテンションヘッドの番号をすべてカンマ区切りで指定
+                - layersと基本指定方法は同じ
+            - clf_mode
+                - 基本はtransformerでOK
+                - lookback_ratio_lrは比較手法のロジスティック回帰をlookback_ratioの特徴量に対して試したいとき専用
+            - pooling_type
+                - truthfulqa専用モード，修論参照
+            - top_models_json_path
+                - 過去に学習したモデルのハイパラを使いまわす用のコード
+                - training_fileに含まれるjsonのpathを指定
+
+- 評価用コードの簡単な説明 (eval_file)
+    - 一部修正しましたが，pathなど合っていない箇所があるかもしれないです，すみません
+        - 適宜使用する際修正してください
+    - confirmation_hallcination_examples.ipynb
+        - 具体的にどこがハルシネーションしているか図示するコード
+    - eval_finetuning_model.ipynb
+        - 比較手法のfine-tuningしたllamaやqwen等の性能を評価
+    - eval_per_hal_type_token_count.ipynb
+        - hallucinationを引き起こしているtokenのtype別調査
+    - eval_per_model_token_count.ipynb
+        - RAGTruthには複数のモデルの出力が含まれる
+            - そのhallucinationをどのモデルによって出力されているかを評価
+    - ragtruth_token_num_count.ipynb
+        - ragtruthのデータセットに含まれるハルシネーションのトークン数をカウント
+    - visualization_attention.ipynb
+        - LLMの各文に対するattentionの大きさを可視化する
+            - llama3_gen.pyと併用
+    
+
+- 大規模データ
+    - 過去に使用したアテンションの特徴量に関するデータや，モデルのハイパラに関するデータを保存しています
+        - 特徴量に関するデータは，2_ragtruth_preprocessing.ipynbまで実行したものになっています
+    - training_fileのmainフォルダに含まれるものは，主要な実験の結果です
+        - こちらはpathやファイル名などもそのまま使えるように修正しました
+            - 環境の違いなどでもし，使えなかった場合はすみません，適宜修正してください
+    - subフォルダに含まれるものは主要ではないサブ実験です
+        - pathは修正しましたが，ファイル名などが非常に適当になっています，すみません.適宜修正してください
+            - linear_syuron
+                - 修論に含まれる線形層を使った実験
+            - logistic
+                - lookback_ratio_lrを使用した評価
+            - qwen_attention_only
+            - truthqa
+                - truthfulqaに関する実験
+            - use_all_features_syuron
+                - lookback_ratioも含めた4種類の特徴量のもの
+            
+            attention_only →　oneに対応
+            
+            without_lookback → allに対応
+            
+            sub/use_all_features_syuron → lookback_ratioも含めた4種類の特徴量のもの
+            
+    
+    ギガファイル便
+    
+    passwordはすべて　0317　です。
+    
+    training_file.zip
+    
+    [https://93.gigafile.nu/0624-m50b17b9c1f8972c8c8f5494d45e508db](https://93.gigafile.nu/0624-m50b17b9c1f8972c8c8f5494d45e508db)
+    
+    231.14GBsaves_llama.zip
+    
+    [https://93.gigafile.nu/0624-f6a299fd5195931b34cb5ec2c20f6b020](https://93.gigafile.nu/0624-f6a299fd5195931b34cb5ec2c20f6b020)
+    
+    152.42GBsaves_qwen.zip
+    
+    [https://93.gigafile.nu/0624-p5ca16328e3b8bb2240c6f24c033fe674](https://93.gigafile.nu/0624-p5ca16328e3b8bb2240c6f24c033fe674)
+    
+    114.1GB
+    
+    上3つをまとめたもの
+    
+    ogasa_hal_data.zip
+    
+    [https://93.gigafile.nu/0624-cc954553cd63549ace819f023c88053a](https://93.gigafile.nu/0624-cc954553cd63549ace819f023c88053a)
+    
+    [https://xgf.nu/H7sZi](https://xgf.nu/H7sZi)
+    
+    497.67GB
+    
+
+- その他
+    - llamaやqwenのfine-tuningはhttps://github.com/hiyouga/LLaMA-Factoryを使って行っています．
+    - なにか分からないことがあればslackか
+    [ogasa.yu.9270@outlook.jp](mailto:何かわからないことがあれば，slackかogasa.yu.9270@outlook.jp) までお願いします
