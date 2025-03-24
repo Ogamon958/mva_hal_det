@@ -1,5 +1,16 @@
 # Hallucination Detection using Multi-View Attention Features
 
+## Research Overview
+
+This research focuses on detecting hallucinations in Large Language Models (LLMs) at the **token level**.
+
+- A Transformer encoder-based model is trained via **supervised learning** to predict whether each token contains hallucination.
+
+- **RAGTruth** is used as the labeled dataset for training and evaluation.
+
+- Additionally, experiments are conducted under a **sentence-level hallucination detection** setting using **TruthfulQA**.
+
+
 
 
 
@@ -169,22 +180,7 @@ chown -R 1009:1009 /home/code
                 2. Restart the container.
                 3. Rebuild and restart the container.
 
-                
-        
-
-- 研究概要
-    - HallucinationをLLMのトークンごとに検出する研究
-    - トークンごとにハルシネーションが含まれるかどうかの教師あり学習をTransformerエンコーダベースのモデルで行う
-    - ラベル付けのデータにはRAGTruthのデータを使用
-        
-        [33F23006-小笠雄也（鬼塚研）-スライド.pdf](33F23006-%E5%B0%8F%E7%AC%A0%E9%9B%84%E4%B9%9F%EF%BC%88%E9%AC%BC%E5%A1%9A%E7%A0%94%EF%BC%89-%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%89.pdf)
-        
-    - truthfulqaに関しても実験を実施
-        - ただしこちらは文単位でのハルシネーション検出
-        - 詳しくは修論に書いてあるので，もし必要になったら読んでください（6章）
-            - （一部内容を省略して書いているので分かりにくかったらすみません）
     
-    [ogasa_thesis_20250217.pdf](ogasa_thesis_20250217.pdf)
     
 
 - メインのコードの簡単な説明 (/featuresに含まれる)
