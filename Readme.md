@@ -19,23 +19,6 @@ https://github.com/sylinrl/TruthfulQA
 
 
 
-Fine-tuned Model
-
-RAGTruth
-
-llama3-8b-instruct
-https://huggingface.co/Ogamon/ragtruth_llama3_8b_instruct
-
-qwen
-https://huggingface.co/Ogamon/qwen-ragtruth
-
-
-TruthfulQA
-
-llama3-8b-instruct
-https://huggingface.co/Ogamon/llama-truthqa
-
-
 
 - **Environment**
     - **CUDA Version**: 11.4  
@@ -227,6 +210,16 @@ Trains and evaluates a Transformer encoder using attention-based features.
   - Path to a JSON file (within `training_file`) that contains hyperparameters from previous training sessions for reuse.
     
 
-- その他
-    - llamaやqwenのfine-tuningはhttps://github.com/hiyouga/LLaMA-Factoryを使って行っています．
-    - 
+## Other Information
+
+- **Fine-tuning**  
+  LLaMA and Qwen fine-tuning is performed using [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
+
+- **Fine-tuned Models**
+
+  - **RAGTruth**
+    - **LLaMA 3-8B Instruct**: [https://huggingface.co/Ogamon/ragtruth_llama3_8b_instruct](https://huggingface.co/Ogamon/ragtruth_llama3_8b_instruct)
+    - **Qwen**: [https://huggingface.co/Ogamon/qwen-ragtruth](https://huggingface.co/Ogamon/qwen-ragtruth)
+
+  - **TruthfulQA**
+    - **LLaMA 3-8B Instruct**: [https://huggingface.co/Ogamon/llama-truthqa](https://huggingface.co/Ogamon/llama-truthqa)
