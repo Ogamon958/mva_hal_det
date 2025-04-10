@@ -223,3 +223,18 @@ Trains and evaluates a Transformer encoder using attention-based features.
 
   - **TruthfulQA**
     - **LLaMA 3-8B Instruct**: [https://huggingface.co/Ogamon/llama-truthqa](https://huggingface.co/Ogamon/llama-truthqa)
+
+
+## Citation
+
+   ```
+    @misc{ogasa2025hallucinationdetectionusingmultiview,
+      title={Hallucination Detection using Multi-View Attention Features}, 
+      author={Yuya Ogasa and Yuki Arase},
+      year={2025},
+      eprint={2504.04335},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2504.04335}, 
+}
+```
