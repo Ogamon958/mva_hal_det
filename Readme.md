@@ -1,6 +1,6 @@
 # Hallucinated Span Detection with Multi-View Attention Features
 
-It was introduced in [the *SEM2025 paper: the LREC-COLING 2024 paper: Controllable Paraphrase Generation for Semantic and Lexical Similarities](https://aclanthology.org/2024.lrec-main.348/).]
+It was introduced in [the *SEM2025 paper: the LREC-COLING 2024 paper: Controllable Paraphrase Generation for Semantic and Lexical Similarities](https://aclanthology.org/2024.lrec-main.348/).
 
 ## Research Overview
 
