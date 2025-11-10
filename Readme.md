@@ -1,4 +1,6 @@
-# Hallucination Detection using Multi-View Attention Features
+# Hallucinated Span Detection with Multi-View Attention Features
+
+It was introduced in [the *SEM2025 paper: the LREC-COLING 2024 paper: Controllable Paraphrase Generation for Semantic and Lexical Similarities](https://aclanthology.org/2024.lrec-main.348/).]
 
 ## Research Overview
 
@@ -228,13 +230,14 @@ Trains and evaluates a Transformer encoder using attention-based features.
 ## Citation
 
    ```
-    @misc{ogasa2025hallucinationdetectionusingmultiview,
-      title={Hallucination Detection using Multi-View Attention Features}, 
-      author={Yuya Ogasa and Yuki Arase},
-      year={2025},
-      eprint={2504.04335},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2504.04335}, 
+    @inproceedings{ogasa-arase-2025-hallucinated,
+    title = "Hallucinated Span Detection with Multi-View Attention Features",
+    author = "Ogasa, Yuya  and
+      Arase, Yuki",
+    booktitle = "Proceedings of the 14th Joint Conference on Lexical and Computational Semantics (*SEM 2025)",
+    month = nov,
+    year = "2025",
+    url = "https://aclanthology.org/2025.starsem-1.31/",
+    pages = "381--394",
 }
 ```
