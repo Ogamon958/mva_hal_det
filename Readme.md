@@ -235,7 +235,6 @@ Trains and evaluates a Transformer encoder using attention-based features.
     author = "Ogasa, Yuya  and
       Arase, Yuki",
     booktitle = "Proceedings of the 14th Joint Conference on Lexical and Computational Semantics (*SEM 2025)",
-    month = nov,
     year = "2025",
     url = "https://aclanthology.org/2025.starsem-1.31/",
     pages = "381--394",
